@@ -26,19 +26,19 @@ public class StoreInfoRepository implements StoreRepository {
         names.put(
                 idMaker.incrementAndGet(),
                 new Store(1L, "카페 할아버지공장",
-                        37.5367027777777, 127.0562,
+                        37.5410836, 127.0549046,
                         new URL("https://pcmap.place.naver.com/restaurant/1425989301/home"),
                         new RequestPoint(61, 126)));
         names.put(
                 idMaker.incrementAndGet(),
                 new Store(2L, "안녕과자점",
-                        37.4735, 126.960488888888,
+                        37.4788958, 126.9548167,
                         new URL("https://pcmap.place.naver.com/restaurant/1709687194/home"),
                         new RequestPoint(60, 125)));
         names.put(
                 idMaker.incrementAndGet(),
                 new Store(3L, "포옹남 성수송정점",
-                        37.5517277777777, 127.071708333333,
+                        37.5483625, 127.064827,
                         new URL("https://pcmap.place.naver.com/restaurant/1982400005/home"),
                         new RequestPoint(61, 126)));
     }
