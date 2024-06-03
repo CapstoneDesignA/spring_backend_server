@@ -56,7 +56,7 @@ public class CongestServiceImpl implements CongestService {
         final String obsrValue = filteredValue.getObsrValue(); // 강수량
         log.info("강수량={}", obsrValue);
         // AI 모델에게 전달
-        final CongestAIResponse response = getCongestValueFromAI(obsrValue).block();
+        final CongestAIResponse response = getCongestValueFromAI(obsrValue, store).block();
         if (!response.isSuccess()) {
             throw new IllegalArgumentException("AI에 강수량 다시 보내기");
         }
@@ -68,9 +68,10 @@ public class CongestServiceImpl implements CongestService {
                 Double.valueOf(congestion));
     }
 
-    private Mono<CongestAIResponse> getCongestValueFromAI(final String obsrValue) {
+    private Mono<CongestAIResponse> getCongestValueFromAI(final String obsrValue,
+                                                          final Store store) {
         final WebClient webClient = webClientBuilder
-                .baseUrl("http://localhost:5000/test/model").build();
+                .baseUrl("http://localhost:5000/model/" + store.code()).build();
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder.queryParam("rain_percent", obsrValue).build())
                 .accept(MediaType.APPLICATION_JSON)
