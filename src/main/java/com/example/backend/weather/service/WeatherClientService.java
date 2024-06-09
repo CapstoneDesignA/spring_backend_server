@@ -3,6 +3,7 @@ package com.example.backend.weather.service;
 import com.example.backend.weather.constant.ApiConstant;
 import com.example.backend.weather.dto.WeatherItem;
 import com.example.backend.weather.dto.WeatherJSONResponse;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -39,7 +40,13 @@ public class WeatherClientService {
         Mono<WeatherJSONResponse> weatherResponse = callWeatherApi(pageNo, numOfRows, baseDate,
                 baseTime, nx, ny);
 
-        return filterWeatherValue(weatherResponse, category);
+        final WeatherJSONResponse json = weatherResponse.block();
+        if (json.getResponse().getBody() == null) {
+            return new WeatherItem(baseDate, baseTime, category.getOrigin(),
+                    Integer.parseInt(nx), Integer.parseInt(ny), "0");
+        }
+
+        return filterWeatherValue(json, category);
     }
 
     private Mono<WeatherJSONResponse> callWeatherApi(
@@ -68,9 +75,8 @@ public class WeatherClientService {
                 .bodyToMono(WeatherJSONResponse.class);
     }
 
-    private WeatherItem filterWeatherValue(Mono<WeatherJSONResponse> jsonResponse,
+    private WeatherItem filterWeatherValue(WeatherJSONResponse json,
                                            ApiConstant category) {
-        final WeatherJSONResponse json = jsonResponse.block();
         if (json == null) {
             throw new IllegalArgumentException("날씨 JSON 응답 값이 없습니다.");
         }
